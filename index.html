@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Button Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+        }
+        .btn {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 20px;
+        }
+        .yes-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+        .no-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Do you want to proceed?</h2>
+        <button class="btn yes-btn" id="yesBtn">Yes</button>
+        <button class="btn no-btn" id="noBtn">No</button>
+        <p id="message" style="display:none; margin-top: 20px;"></p>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const message = document.getElementById('message');
+    
+        let previousX = 0;
+        let previousY = 0;
+        const minDistance = 100;  // Minimum distance between old and new positions
+    
+        // Function to move the 'No' button to a random position within the container
+        noBtn.addEventListener('mouseover', () => {
+            const container = document.querySelector('.container');
+            const containerRect = container.getBoundingClientRect();
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+    
+            let randomX, randomY;
+            let distance;
+    
+            // Loop until we find a valid position that's far enough away
+            do {
+                // Generate random X and Y positions
+                randomX = Math.random() * (containerRect.width - btnWidth);
+                randomY = Math.random() * (containerRect.height - btnHeight);
+    
+                // Calculate the distance between previous and current positions
+                distance = Math.sqrt(Math.pow(randomX - previousX, 2) + Math.pow(randomY - previousY, 2));
+    
+                // Check for closeness to corners/edges, and ensure minimum distance
+            } while (distance < minDistance ||
+                     randomX < 20 || randomY < 20 ||                   // Avoid very close to left/top edges
+                     randomX > containerRect.width - btnWidth - 20 ||  // Avoid very close to right edge
+                     randomY > containerRect.height - btnHeight - 20); // Avoid very close to bottom edge
+    
+            // Update the position of the "No" button
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = `${randomX}px`;
+            noBtn.style.top = `${randomY}px`;
+    
+            // Store the current position for the next check
+            previousX = randomX;
+            previousY = randomY;
+        });
+    
+        // Show message when "Yes" button is clicked
+        yesBtn.addEventListener('click', () => {
+            message.textContent = "Thank you for choosing Yes!";
+            message.style.display = 'block';
+        });
+    </script>
+    
+</body>
+</html>
